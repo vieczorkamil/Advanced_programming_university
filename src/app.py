@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-import src.picture_invert as ep_1
-import src.prime_number as ep_2
+import src.endpoints.picture_invert as ep_1
+import src.endpoints.prime_number as ep_2
 
 app = FastAPI(
     title="Zaawansowane programowanie - FastAPI"
