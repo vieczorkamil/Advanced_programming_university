@@ -1,5 +1,11 @@
+#TODO: add version to all packages
 fastapi
+pytest
+requests
 uvicorn[standard]
 sympy
 python-multipart
 Pillow
+locust
+opencv-python==4.5.5.62
+numpy==1.23.4
