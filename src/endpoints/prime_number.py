@@ -8,9 +8,9 @@ router = APIRouter(
 
 
 @router.get("/{number}")
-async def check_number(number: int):
+async def check_number(number: str):
     if check_correctnes(number):
-        response = {"Is number prime": sympy.isprime(number)}
+        response = {"Is number prime": sympy.isprime(int(number))}
     else:
         response = {"Error handler": "Not valid input number"}
     return response
@@ -18,8 +18,12 @@ async def check_number(number: int):
 """ Helpers functions """
 
 
-def check_correctnes(number: int) -> bool:
-    if number <= 1:
+def check_correctnes(number: any) -> bool:
+    try:
+        temp = int(number)
+        if temp <= 1 | temp > 9223372036854775807:
+            return False
+        else:
+            return True
+    except:
         return False
-    else:
-        return True

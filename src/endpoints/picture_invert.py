@@ -1,9 +1,8 @@
 from fastapi import UploadFile, File
 from fastapi import APIRouter
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse
 from PIL import Image
 import PIL.ImageOps
-import numpy as np
 import shutil
 
 router = APIRouter(
@@ -22,12 +21,13 @@ async def picture_invert(image: UploadFile = File(...)):
     return FileResponse("photos/return.jpg")
 
 
-# FIXME: why that not working????
-@router.post("/upload", responses={200: {"content": {"image/jpeg": {}}}}, response_class=Response)
-async def picture_update(image: UploadFile = File(...)):
-    content = image.file.read()
-    temp = bytearray(content)
-    for i in range(0, len(content)):
-        temp[i] = np.abs(255 - content[i])
-    out = bytes(temp)
-    return Response(content=out, media_type="image/jpeg")
+# # FIXME: why that's not working????
+# @router.post("/upload", responses={200: {"content": {"image/jpeg": {}}}}, response_class=Response)
+# async def picture_update(image: UploadFile = File(...)):
+#     content = image.file.read()
+#     temp = bytearray(content)
+#     for i in range(0, len(content)):
+#         temp[i] = np.abs(255 - content[i])
+#     out = bytes(temp)
+#     # return Response(content=out, media_type="image/jpeg")
+#     return StreamingResponse(content=io.BytesIO(out), media_type="image/png")

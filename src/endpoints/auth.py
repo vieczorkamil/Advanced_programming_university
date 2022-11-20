@@ -6,7 +6,10 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 
-SECRET_KEY = 'SECRET'  # TODO:
+SECRET_KEY = 'C$N7[L*-VqAWp)dCet[AR]#}kgsZDIjmx;3_[l15(d*A@b*+?-}/C(g`cMf>8Uu['
+TOKEN_EXP_DAYS = 0
+TOKEN_EXP_MINUTES = 1
+TOKEN_EXP_SECONDS = 0
 
 
 class AuthHandler():
@@ -22,7 +25,7 @@ class AuthHandler():
 
     def encode_token(self, user_id: str) -> str:
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, minutes=5),
+            'exp': datetime.utcnow() + timedelta(days=TOKEN_EXP_DAYS, minutes=TOKEN_EXP_MINUTES, seconds=TOKEN_EXP_SECONDS),
             'iat': datetime.utcnow(),
             'sub': user_id
         }
@@ -67,18 +70,18 @@ usersHardCoded = \
     ]
 
 
-@router.post('/register', status_code=201)
-def register(auth_details: AuthDetails):
-    if any(x['username'] == auth_details.username for x in users):
-        raise HTTPException(status_code=400, detail='Username is taken')
-    hashed_password = auth_handler.get_password_hash(auth_details.password)
-    users.append(
-        {
-            'username': auth_details.username,
-            'password': hashed_password
-        }
-    )
-    return
+# @router.post('/register', status_code=201)
+# def register(auth_details: AuthDetails):
+#     if any(x['username'] == auth_details.username for x in users):
+#         raise HTTPException(status_code=400, detail='Username is taken')
+#     hashed_password = auth_handler.get_password_hash(auth_details.password)
+#     users.append(
+#         {
+#             'username': auth_details.username,
+#             'password': hashed_password
+#         }
+#     )
+#     return
 
 
 @router.post('/login')
@@ -95,23 +98,22 @@ def login(auth_details: AuthDetails):
     return {'token': token}
 
 
-@router.get('/unprotected')
-def unprotected():
-    """
-    Helper function to check list of registered users
+# @router.get('/unprotected')
+# def unprotected():
+#     """
+#     Helper function to check list of registered users
 
-    Parameters: 
-        None
-    Returns: 
-        None
-    """
-    for x in usersHardCoded:
-        print(x)
-    return {'hello': usersHardCoded}
-    # return {'hello': 'world'}
+#     Parameters:
+#         None
+#     Returns:
+#         None
+#     """
+#     for x in usersHardCoded:
+#         print(x)
+#     return {'hello': usersHardCoded}
+#     # return {'hello': 'world'}
 
 
 @router.get('/protected')
 def protected(username=Depends(auth_handler.auth_wrapper)):
-    print(username)  # DEBUG:
     return {'Current time': datetime.now().replace(microsecond=0).isoformat()}
