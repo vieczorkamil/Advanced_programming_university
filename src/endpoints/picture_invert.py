@@ -19,15 +19,3 @@ async def picture_invert(image: UploadFile = File(...)):
     inverted_image = PIL.ImageOps.invert(base_image)
     inverted_image.save("photos/return.jpg")
     return FileResponse("photos/return.jpg")
-
-
-# # FIXME: why that's not working????
-# @router.post("/upload", responses={200: {"content": {"image/jpeg": {}}}}, response_class=Response)
-# async def picture_update(image: UploadFile = File(...)):
-#     content = image.file.read()
-#     temp = bytearray(content)
-#     for i in range(0, len(content)):
-#         temp[i] = np.abs(255 - content[i])
-#     out = bytes(temp)
-#     # return Response(content=out, media_type="image/jpeg")
-#     return StreamingResponse(content=io.BytesIO(out), media_type="image/png")
