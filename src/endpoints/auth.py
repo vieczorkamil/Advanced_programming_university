@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 import jwt
-from fastapi import HTTPException, Security
+from fastapi import HTTPException, Security, Form
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from pydantic import BaseModel
 
 SECRET_KEY = 'C$N7[L*-VqAWp)dCet[AR]#}kgsZDIjmx;3_[l15(d*A@b*+?-}/C(g`cMf>8Uu['
 TOKEN_EXP_DAYS = 0
@@ -48,11 +47,6 @@ class AuthHandler():
         return self.decode_token(auth.credentials)
 
 
-class AuthDetails(BaseModel):
-    username: str
-    password: str
-
-
 router = APIRouter(
     prefix="/auth",
     tags=["Zadanie 3"]
@@ -70,15 +64,16 @@ usersHardCoded = \
     ]
 
 
+
 @router.post('/login')
-def login(auth_details: AuthDetails):
+async def login(username: str = Form(), password: str = Form()):
     user = None
     for x in usersHardCoded:
-        if x['username'] == auth_details.username:
+        if x['username'] == username:
             user = x
             break
 
-    if (user is None) or (not auth_handler.verify_password(auth_details.password, user['password'])):
+    if (user is None) or (not auth_handler.verify_password(password, user['password'])):
         raise HTTPException(status_code=401, detail='Invalid username and/or password')
     token = auth_handler.encode_token(user['username'])
     return {'token': token}
@@ -88,16 +83,3 @@ def login(auth_details: AuthDetails):
 def protected(username=Depends(auth_handler.auth_wrapper)):
     return {'Current time': datetime.now().replace(microsecond=0).isoformat()}
 
-
-@router.get('/protected2')
-def protected2(auth_details: AuthDetails):
-    user = None
-    for x in usersHardCoded:
-        if x['username'] == auth_details.username:
-            user = x
-            break
-
-    if (user is None) or (not auth_handler.verify_password(auth_details.password, user['password'])):
-        raise HTTPException(status_code=401, detail='Invalid username and/or password')
-    token = auth_handler.encode_token(user['username'])
-    Depends(auth_handler.auth_wrapper(token))
