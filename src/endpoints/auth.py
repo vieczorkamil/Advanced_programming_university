@@ -87,3 +87,17 @@ def login(auth_details: AuthDetails):
 @router.get('/protected')
 def protected(username=Depends(auth_handler.auth_wrapper)):
     return {'Current time': datetime.now().replace(microsecond=0).isoformat()}
+
+
+@router.get('/protected2')
+def protected2(auth_details: AuthDetails):
+    user = None
+    for x in usersHardCoded:
+        if x['username'] == auth_details.username:
+            user = x
+            break
+
+    if (user is None) or (not auth_handler.verify_password(auth_details.password, user['password'])):
+        raise HTTPException(status_code=401, detail='Invalid username and/or password')
+    token = auth_handler.encode_token(user['username'])
+    Depends(auth_handler.auth_wrapper(token))

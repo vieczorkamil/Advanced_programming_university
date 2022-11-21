@@ -1,9 +1,9 @@
-from fastapi import UploadFile, File
+from fastapi import File
 from fastapi import APIRouter
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 from PIL import Image
 import PIL.ImageOps
-import shutil
+import io
 
 router = APIRouter(
     prefix="/picture",
@@ -12,10 +12,13 @@ router = APIRouter(
 
 
 @router.post("/invert")
-async def picture_invert(image: UploadFile = File(...)):
-    with open("Photos/temp.jpg", "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-    base_image = Image.open("photos/temp.jpg")
-    inverted_image = PIL.ImageOps.invert(base_image)
-    inverted_image.save("photos/return.jpg")
-    return FileResponse("photos/return.jpg")
+async def picture_invert(image: bytes = File(...)):
+    return StreamingResponse(invert_colors(image), media_type="image/jpeg")
+
+
+def invert_colors(input_image: bytes) -> bytes:
+    inverted_image = PIL.ImageOps.invert(Image.open(io.BytesIO(input_image)))
+    output_image = io.BytesIO()
+    inverted_image.save(output_image, format='jpeg')
+    output_image.seek(0)
+    return output_image

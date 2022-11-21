@@ -1,5 +1,6 @@
 .vscode
 env
+.pytest_cache
 /__pycache__
 /endpoints/__pycache__
 src/endpoints/__pycache__

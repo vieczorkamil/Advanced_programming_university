@@ -21,7 +21,7 @@ async def check_number(number: str):
 def check_correctnes(number: any) -> bool:
     try:
         temp = int(number)
-        if temp <= 1 | temp > 9223372036854775807:
+        if temp <= 1 or temp > 9223372036854775807:
             return False
         else:
             return True
