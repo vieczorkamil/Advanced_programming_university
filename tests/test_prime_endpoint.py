@@ -35,8 +35,8 @@ def test_check_max_prime(client):
 def test_check_non_valid(client):
     number = -43
     resp = client.get(f"prime/{number}")
-    assert resp.status_code == 200
-    expected = {"Error handler": "Not valid input number"}
+    assert resp.status_code == 406
+    expected = {"detail": "Not valid input number"}
     assert resp.json() == expected
 
 

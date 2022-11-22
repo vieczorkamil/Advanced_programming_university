@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import sympy
 
 router = APIRouter(
@@ -12,7 +12,8 @@ async def check_number(number: str):
     if check_correctnes(number):
         response = {"Is number prime": sympy.isprime(int(number))}
     else:
-        response = {"Error handler": "Not valid input number"}
+        raise HTTPException(status_code=406, detail='Not valid input number')
+        # response = {"Error handler": "Not valid input number"}
     return response
 
 """ Helpers functions """
