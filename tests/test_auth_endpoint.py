@@ -20,7 +20,7 @@ def test_login(client):
         'password': 'Dupa8'
     }
     auth_handler = AuthHandler()
-    resp = client.post(f"auth/login", json=user)
+    resp = client.post(f"auth/login", data=user)
     assert resp.status_code == 200
     # Save the returned token for the next tests
     temp = resp.json()
@@ -36,7 +36,7 @@ def test_invalid_login(client):
         'username': 'Kamil',
         'password': 'Dupa7'
     }
-    resp = client.post(f"auth/login", json=user)
+    resp = client.post(f"auth/login", data=user)
     assert resp.status_code == 401
     expected = {'detail': 'Invalid username and/or password'}
     assert resp.json() == expected
