@@ -16,8 +16,8 @@ def client():
 def test_login(client):
     global TOKEN
     user = {
-        'username': 'Kamil',
-        'password': 'Dupa8'
+        'username': 'admin',
+        'password': 'admin'
     }
     auth_handler = AuthHandler()
     resp = client.post(f"auth/login", data=user)
@@ -33,8 +33,8 @@ def test_login(client):
 
 def test_invalid_login(client):
     user = {
-        'username': 'Kamil',
-        'password': 'Dupa7'
+        'username': 'admin',
+        'password': 'Dupa.8'
     }
     resp = client.post(f"auth/login", data=user)
     assert resp.status_code == 401

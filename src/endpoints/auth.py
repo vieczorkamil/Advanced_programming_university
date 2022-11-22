@@ -58,8 +58,8 @@ users = []
 usersHardCoded = \
     [
         {
-            'username': 'Kamil',
-            'password': auth_handler.get_password_hash('Dupa8')
+            'username': 'admin',
+            'password': auth_handler.get_password_hash('admin')
         }
     ]
 

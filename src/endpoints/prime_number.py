@@ -13,7 +13,6 @@ async def check_number(number: str):
         response = {"Is number prime": sympy.isprime(int(number))}
     else:
         raise HTTPException(status_code=406, detail='Not valid input number')
-        # response = {"Error handler": "Not valid input number"}
     return response
 
 """ Helpers functions """
